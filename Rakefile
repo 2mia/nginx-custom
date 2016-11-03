@@ -8,6 +8,7 @@ end
 namespace :nginx do
   desc "Starts NGINX"
   task :start do
+    `rm -fr build/nginx/logs/*`
     `build/nginx/sbin/nginx`
     sleep 1
   end
@@ -21,6 +22,11 @@ namespace :nginx do
   task :compile do
     sh "script/compile"
   end
+  
+  desc "Show errors NGINX"
+  task :errors do
+    `cat build/nginx/logs/err*`
+  end
 end
 
 desc "Bootstraps the local development environment"
@@ -31,4 +37,4 @@ task :bootstrap do
 end
 
 desc "Run the integration tests"
-task :default => [:bootstrap, "nginx:start", :integration, "nginx:stop"]
+task :default => [:bootstrap, "nginx:start", :integration, "nginx:stop", "nginx:errors"]
